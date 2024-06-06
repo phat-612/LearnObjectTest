@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              clifford: "#da373d",
+            },
+          },
+        },
+      };
+    </script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="font-sans flex flex-col items-center">
+      <div class="question text-xl font-bold mb-4 text-center"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div
+          class="answers answerA option bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer hover:bg-blue-100 flex justify-center items-center"
+          data-id="1"
+        ></div>
+        <div
+          class="answers answerB option bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer hover:bg-blue-100 flex justify-center items-center"
+          data-id="2"
+        ></div>
+        <div
+          class="answers answerC option bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer hover:bg-blue-100 flex justify-center items-center"
+          data-id="3"
+        ></div>
+        <div
+          class="answers answerD option bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer hover:bg-blue-100 flex justify-center items-center"
+          data-id="4"
+        ></div>
+      </div>
+      <div
+        class="answerTrue"
+        hidden
+      ></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
