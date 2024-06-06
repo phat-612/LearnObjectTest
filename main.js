@@ -19,7 +19,8 @@ mẫu dữ liệu:
 }
 - answer: 1 là đáp án A, 2 là đáp án B, 3 là đáp án C, 4 là đáp án D
 */
-
+const domainFile =
+  "https://github.com/phat-612/LearnObjectTest/blob/main/excel/";
 const eleQuestion = $(".question");
 const eleAnswerA = $(".answerA");
 const eleAnswerB = $(".answerB");
@@ -66,7 +67,7 @@ function getQueryParamsAsObject() {
 // Sử dụng hàm
 const queryParams = getQueryParamsAsObject();
 
-fetch(`/excel/${queryParams.fileName}`)
+fetch(`${domainFile + queryParams.fileName}`)
   .then((response) => response.arrayBuffer())
   .then((arrayBuffer) => {
     let data = new Uint8Array(arrayBuffer);
