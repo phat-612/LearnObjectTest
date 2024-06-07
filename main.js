@@ -19,8 +19,7 @@ mẫu dữ liệu:
 }
 - answer: 1 là đáp án A, 2 là đáp án B, 3 là đáp án C, 4 là đáp án D
 */
-const domainFile =
-  "https://github.com/phat-612/LearnObjectTest/blob/main/excel/";
+const domainFile = "/excel/";
 const eleQuestion = $(".question");
 const eleAnswerA = $(".answerA");
 const eleAnswerB = $(".answerB");
@@ -28,6 +27,7 @@ const eleAnswerC = $(".answerC");
 const eleAnswerD = $(".answerD");
 const eleAnswer = $(".answerTrue");
 let countError = 0;
+let countTrue = 0;
 
 document.addEventListener("keydown", function (event) {
   let key = event.key;
@@ -90,13 +90,18 @@ fetch(`${domainFile + queryParams.fileName}`)
     if (to > countQuestion) {
       to = countQuestion;
     }
+    console.log("from", from);
+    console.log("to", to);
+    console.log("countQuestion", countQuestion);
     // random câu hỏi
     let randomQuestion = [];
     let mistaskQuestion = [];
     for (let i = from - 1; i < to; i++) {
       randomQuestion.push(json[i]);
     }
-    let currentQuestion = from - 1;
+    let totalQuestion = randomQuestion.length;
+    console.log("randomQuestion", randomQuestion);
+    let currentQuestion = 0;
     function renderQuestion(currentQuestion, questions = randomQuestion) {
       let question = questions[currentQuestion];
       eleQuestion.text(question.question);
@@ -114,20 +119,27 @@ fetch(`${domainFile + queryParams.fileName}`)
       if (id === idAnwer) {
         currentQuestion++;
         e.target.style.backgroundColor = "green";
-        if (currentQuestion < to) {
-          if (countError >= 1) {
-            setTimeout(() => {
-              $(".answers").css("background-color", "");
-              countError = 0;
-              renderQuestion(currentQuestion);
-            }, 3000);
-          } else {
+        if (currentQuestion < totalQuestion) {
+          countTrue++;
+          if (countError >= 1 && countTrue >= 2) {
             $(".answers").css("background-color", "");
             countError = 0;
+            countTrue = 0;
+            renderQuestion(currentQuestion);
+          } else if (countError === 0) {
+            $(".answers").css("background-color", "");
+            countError = 0;
+            countTrue = 0;
             renderQuestion(currentQuestion);
           }
         } else {
-          alert("Bạn đã hoàn thành bài thi");
+          randomQuestion = mistaskQuestion;
+          mistaskQuestion = [];
+          if (randomQuestion.length === 0) {
+            alert("Bạn đã hoàn thành bài thi");
+            return;
+          }
+          currentQuestion = 0;
         }
       } else {
         countError++;
