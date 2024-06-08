@@ -5,9 +5,16 @@ const eleAnswerB = $(".answerB");
 const eleAnswerC = $(".answerC");
 const eleAnswerD = $(".answerD");
 const eleAnswer = $(".answerTrue");
-let countError = 0;
+const eleStreak = $(".streak");
+const eleError = $(".error");
+const eleCurrentQuestion = $(".currentQuestion");
+const eleTotalQuestion = $(".totalQuestion");
+let countErrorTime = 0;
 let countTrue = 0;
-
+let countStreak = 0;
+let countErorr = 0;
+let currentQuestion = 0;
+let totalQuestion = 0;
 document.addEventListener("keydown", function (event) {
   let key = event.key;
   switch (key) {
@@ -57,6 +64,7 @@ $.ajax({
   dataType: "text",
   success: function (response) {
     // var data = $.csv.toArrays(response);
+
     var json = $.csv.toObjects(response);
     let countQuestion = json.length;
     let from = queryParams.from ? parseInt(queryParams.from) : 1;
@@ -67,18 +75,21 @@ $.ajax({
     if (to > countQuestion) {
       to = countQuestion;
     }
-    console.log("from", from);
-    console.log("to", to);
-    console.log("countQuestion", countQuestion);
     // random câu hỏi
     let randomQuestion = [];
     let mistaskQuestion = [];
     for (let i = from - 1; i < to; i++) {
       randomQuestion.push(json[i]);
     }
-    let totalQuestion = randomQuestion.length;
-    console.log("randomQuestion", randomQuestion);
-    let currentQuestion = 0;
+    totalQuestion = randomQuestion.length;
+    currentQuestion = 0;
+    function renderCount() {
+      eleStreak.text(countStreak);
+      eleError.text(countErorr);
+      eleCurrentQuestion.text(currentQuestion + 1);
+      eleTotalQuestion.text(totalQuestion);
+    }
+    renderCount();
     function renderQuestion(currentQuestion, questions = randomQuestion) {
       let question = questions[currentQuestion];
       eleQuestion.text(question.question);
@@ -98,16 +109,20 @@ $.ajax({
         e.target.style.backgroundColor = "green";
         if (currentQuestion < totalQuestion) {
           countTrue++;
-          if (countError >= 1 && countTrue >= 2) {
+          if (countErrorTime >= 1 && countTrue >= 2) {
             $(".answers").css("background-color", "");
-            countError = 0;
+            countErrorTime = 0;
             countTrue = 0;
             renderQuestion(currentQuestion);
-          } else if (countError === 0) {
+            countStreak++;
+            renderCount();
+          } else if (countErrorTime === 0) {
             $(".answers").css("background-color", "");
-            countError = 0;
+            countErrorTime = 0;
             countTrue = 0;
             renderQuestion(currentQuestion);
+            countStreak++;
+            renderCount();
           }
         } else {
           randomQuestion = mistaskQuestion;
@@ -119,9 +134,12 @@ $.ajax({
           currentQuestion = 0;
         }
       } else {
-        countError++;
-        if (countError === 1) {
+        countErrorTime++;
+        if (countErrorTime === 1) {
           mistaskQuestion.push(randomQuestion[currentQuestion]);
+          countErorr++;
+          countStreak = 0;
+          renderCount();
         }
         e.target.style.backgroundColor = "red";
       }
