@@ -198,25 +198,25 @@ function showQuestions() {
             answer == 1 ? "bg-green-400" : ""
           } answers answerA option bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer flex justify-center items-center"
           data-id="1"
-        >${answerA}</div>
+        >${he.encode(answerA)}</div>
         <div
           class="${
             answer == 2 ? "bg-green-400" : ""
           } answers answerB option bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer flex justify-center items-center"
           data-id="2"
-        >${answerB}</div>
+        >${he.encode(answerB)}</div>
         <div
           class="${
             answer == 3 ? "bg-green-400" : ""
           } answers answerC option bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer flex justify-center items-center"
           data-id="3"
-        >${answerC}</div>
+        >${he.encode(answerC)}</div>
         <div
           class="${
             answer == 4 ? "bg-green-400" : ""
           } answers answerD option bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer flex justify-center items-center"
           data-id="4"
-        >${answerD}</div>
+        >${he.encode(answerD)}</div>
       </div>
         `;
       }
