@@ -1,24 +1,3 @@
-/* href of the page: localhost:5500?fileName=mon_KtLt.xlsx&from=1&to=10
-fileName: tên file excel
-from: câu hỏi bắt đầu
-to: câu hỏi kết thúc
-- nếu không có from và to thì lấy tất cả câu hỏi
-- nếu không có fileName thì lấy file mặc định mon_KtLt.xlsx
-- nếu người dùng chọn đáp án đúng thì sẽ chuyển qua câu kế tiếp
-- nếu người dùng chọn đáp án sai thì sẽ hiện thông báo và chờ người dùng chọn lại
-- nếu người dùng chọn đáp án đúng ở câu cuối cùng thì hiện thông báo "Bạn đã hoàn thành bài thi"
-khi render ra đáp án thì sẽ ngẫu nhiên vị trí của đáp án đúng
-mẫu dữ liệu:
-{
-    question: "Câu 1: Câu hỏi 1",
-    answerA: "A. Đáp án A",
-    answerB: "B. Đáp án B",
-    answerC: "C. Đáp án C",
-    answerD: "D. Đáp án D",
-    answer: 1
-}
-- answer: 1 là đáp án A, 2 là đáp án B, 3 là đáp án C, 4 là đáp án D
-*/
 const domainFile = "/excel/";
 const eleQuestion = $(".question");
 const eleAnswerA = $(".answerA");
@@ -67,20 +46,18 @@ function getQueryParamsAsObject() {
 // Sử dụng hàm
 const queryParams = getQueryParamsAsObject();
 
-fetch(`${domainFile + queryParams.fileName}`)
-  .then((response) => response.arrayBuffer())
-  .then((arrayBuffer) => {
-    let data = new Uint8Array(arrayBuffer);
-    let workbook = XLSX.read(data, { type: "array" });
+const sheetId = queryParams.sheetId;
 
-    // Lấy tên của sheet đầu tiên
-    let firstSheetName = workbook.SheetNames[0];
+const sheetName = encodeURIComponent(queryParams.sheetName);
+const sheetURL = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
 
-    // Sử dụng sheet đầu tiên
-    let worksheet = workbook.Sheets[firstSheetName];
-
-    // Chuyển đổi sheet thành JSON
-    let json = XLSX.utils.sheet_to_json(worksheet);
+$.ajax({
+  type: "GET",
+  url: sheetURL,
+  dataType: "text",
+  success: function (response) {
+    // var data = $.csv.toArrays(response);
+    var json = $.csv.toObjects(response);
     let countQuestion = json.length;
     let from = queryParams.from ? parseInt(queryParams.from) : 1;
     let to = queryParams.to ? parseInt(queryParams.to) : countQuestion;
@@ -149,5 +126,5 @@ fetch(`${domainFile + queryParams.fileName}`)
         e.target.style.backgroundColor = "red";
       }
     });
-  })
-  .catch((error) => console.error("Error:", error));
+  },
+});
